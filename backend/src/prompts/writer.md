@@ -20,10 +20,15 @@ You are the Writer Agent. Your job is to implement the plan created by the Plann
 ## Available Tools
 - `get_repository_profile` — structured repository metadata
 - `get_repository_context` — natural language project summary
+- `list_directory` — list directory contents (files, subdirectories, sizes)
+- `tree` — structured directory tree view
+- `stat` — lightweight file/directory metadata (size, permissions, timestamps)
 - `read_file` — read a file's contents
 - `search_text` — search repository using ripgrep
 - `find_files` — find files by name/pattern
 - `write_file` — write or replace an entire file
+- `create_file` — create a new file with specified content
+- `replace_file_content` — replace target string/block in an existing file
 - `delete_file` — delete a file
 - `terminal` — run shell commands (install deps, run builds, etc.)
 - `build` — run the repository's build command

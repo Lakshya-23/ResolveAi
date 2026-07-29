@@ -79,11 +79,11 @@ Every agent in ResolvAI operates under strict role constraints and tool permissi
 
 | Agent | Role & Scope | Allowed Tools & Capabilities |
 | :--- | :--- | :--- |
-| **Supervisor** | Workflow orchestration, routing decisions, human feedback evaluation, PR creation. | LangGraph state management, LLM Decision Dispatch, GitHub PR creation. |
-| **Planner** *(Architect)* | Read-only codebase exploration, dependency analysis, implementation planning. | `get_repository_profile`, `get_repository_context`, `read_file`, `write_file` *(report only)*, `search_text`, `find_files`, `terminal`, `git_log`, `web_search`. |
-| **Coding Agent** *(Engineer)* | Implements code changes, updates tests, creates/deletes files inside container. | `get_repository_profile`, `get_repository_context`, `read_file`, `write_file`, `delete_file`, `search_text`, `find_files`, `terminal`, `build`, `linter`, `git_diff`, `git_status`. |
-| **Tester** *(QA Engineer)* | Runs builds, test suites, and linters inside isolated Docker container. | `get_repository_profile`, `read_file`, `write_file` *(report only)*, `build`, `test`, `linter`, `terminal`, `git_diff`, `git_status`, `web_search`. |
-| **Reviewer** *(Code Reviewer)* | Evaluates engineering quality, maintainability, architectural compliance, and edge cases. | `get_repository_profile`, `get_repository_context`, `read_file`, `write_file` *(report only)*, `search_text`, `find_files`, `git_diff`, `git_status`, `git_log`. |
+| **Supervisor** | Workflow orchestration, routing decisions, human feedback evaluation, PR creation. | LangGraph state management, LLM Decision Dispatch, GitHub PR creation.|
+| **Planner** *(Architect)* | Read-only codebase exploration, dependency analysis, strategy planning. | `get_repository_profile`, `get_repository_context`, `list_directory`, `tree`, `stat`, `read_file`, `write_file` *(report only)*, `create_file` *(report only)*, `replace_file_content` *(report only)*, `search_text`, `find_files`, `git_log`, `web_search`. |
+| **Coding Agent** *(Engineer)* | Implements code changes, updates tests, creates/deletes files inside container. | `get_repository_profile`, `get_repository_context`, `list_directory`, `tree`, `stat`, `read_file`, `write_file`, `create_file`, `replace_file_content`, `delete_file`, `search_text`, `find_files`, `terminal`, `build`, `linter`, `git_diff`, `git_status`. |
+| **Tester** *(QA Engineer)* | Runs builds, test suites, and linters inside isolated Docker container. | `get_repository_profile`, `list_directory`, `tree`, `stat`, `read_file`, `write_file`, `create_file`, `replace_file_content`, `delete_file`, `build`, `test`, `linter`, `terminal`, `git_diff`, `git_status`, `web_search`. |
+| **Reviewer** *(Code Reviewer)* | Evaluates engineering quality, maintainability, architectural compliance, and edge cases. | `get_repository_profile`, `get_repository_context`, `list_directory`, `tree`, `stat`, `read_file`, `write_file` *(report only)*, `create_file` *(report only)*, `replace_file_content` *(report only)*, `search_text`, `find_files`, `git_diff`, `git_status`, `git_log`. |
 
 ---
 

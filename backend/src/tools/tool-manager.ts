@@ -16,25 +16,31 @@ const AGENT_PERMISSIONS: Record<AgentName, string[]> = {
   supervisor: [], // Supervisor uses pure reasoning, no repository tools
   planner: [
     'get_repository_profile', 'get_repository_context',
-    'read_file', 'write_file', 'search_text', 'find_files',
-    'terminal', 'git_log', 'web_search',
+    'list_directory', 'tree', 'stat',
+    'read_file', 'write_file', 'create_file', 'replace_file_content',
+    'search_text', 'find_files',
+    'git_log', 'web_search',
   ],
   writer: [
     'get_repository_profile', 'get_repository_context',
-    'read_file', 'search_text', 'find_files',
-    'write_file', 'delete_file',
+    'list_directory', 'tree', 'stat',
+    'read_file', 'write_file', 'create_file', 'replace_file_content', 'delete_file',
+    'search_text', 'find_files',
     'terminal', 'build', 'linter',
     'git_diff', 'git_status',
   ],
   tester: [
     'get_repository_profile',
-    'read_file', 'write_file',
+    'list_directory', 'tree', 'stat',
+    'read_file', 'write_file', 'create_file', 'replace_file_content', 'delete_file',
     'build', 'test', 'linter',
     'terminal', 'git_diff', 'git_status', 'web_search',
   ],
   reviewer: [
     'get_repository_profile', 'get_repository_context',
-    'read_file', 'write_file', 'search_text', 'find_files',
+    'list_directory', 'tree', 'stat',
+    'read_file', 'write_file', 'create_file', 'replace_file_content',
+    'search_text', 'find_files',
     'git_diff', 'git_status', 'git_log',
   ],
 };
@@ -84,6 +90,43 @@ export function createToolsForAgent(params: {
     ));
   }
 
+  // ─── Directory & Metadata Tools ───
+  if (allowedTools.includes('list_directory')) {
+    tools.push(tool(
+      async ({ path }) => toolFunctions.listDirectory(containerId, path),
+      {
+        name: 'list_directory',
+        description: 'List contents of a directory (files, subdirectories, sizes)',
+        schema: z.object({ path: z.string().optional().describe('Relative directory path (defaults to root .)') }),
+      }
+    ));
+  }
+
+  if (allowedTools.includes('tree')) {
+    tools.push(tool(
+      async ({ path, maxDepth }) => toolFunctions.tree(containerId, path, maxDepth),
+      {
+        name: 'tree',
+        description: 'Get a structured tree view of directory hierarchy',
+        schema: z.object({
+          path: z.string().optional().describe('Relative directory path (defaults to root .)'),
+          maxDepth: z.number().optional().describe('Max depth level (defaults to 2)'),
+        }),
+      }
+    ));
+  }
+
+  if (allowedTools.includes('stat')) {
+    tools.push(tool(
+      async ({ path }) => toolFunctions.stat(containerId, path),
+      {
+        name: 'stat',
+        description: 'Get lightweight metadata for a file or directory (size, permissions, timestamps)',
+        schema: z.object({ path: z.string().describe('Relative file or directory path') }),
+      }
+    ));
+  }
+
   // ─── File Tools ───
   if (allowedTools.includes('read_file')) {
     tools.push(tool(
@@ -105,6 +148,36 @@ export function createToolsForAgent(params: {
         schema: z.object({
           path: z.string().describe('Relative file path'),
           content: z.string().describe('Complete file content to write'),
+        }),
+      }
+    ));
+  }
+
+  if (allowedTools.includes('create_file')) {
+    tools.push(tool(
+      async ({ path, content }) => toolFunctions.createFile(containerId, path, content),
+      {
+        name: 'create_file',
+        description: 'Create a new file with the specified content in the repository',
+        schema: z.object({
+          path: z.string().describe('Relative file path to create'),
+          content: z.string().describe('File content to write'),
+        }),
+      }
+    ));
+  }
+
+  if (allowedTools.includes('replace_file_content')) {
+    tools.push(tool(
+      async ({ path, targetContent, replacementContent }) =>
+        toolFunctions.replaceFileContent(containerId, path, targetContent, replacementContent),
+      {
+        name: 'replace_file_content',
+        description: 'Replace a target text string or block in an existing file with replacement content',
+        schema: z.object({
+          path: z.string().describe('Relative file path'),
+          targetContent: z.string().describe('Exact target text string or code block to find and replace'),
+          replacementContent: z.string().describe('Replacement text string or code block'),
         }),
       }
     ));

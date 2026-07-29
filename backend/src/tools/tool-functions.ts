@@ -10,7 +10,34 @@ const log = createLogger('Tools');
  * They are "dumb" — no intelligence, just execute and return results.
  */
 
-// ─── File Tools ───
+// ─── Directory & Metadata Tools ───
+
+export async function listDirectory(containerId: string, dirPath?: string): Promise<string> {
+  const target = dirPath || '.';
+  const result = await dockerService.execInContainer(containerId, [`ls -la "${target}"`]);
+  if (result.exitCode !== 0) {
+    throw new ToolExecutionError('list_directory', `Cannot list directory ${target}: ${result.stderr}`);
+  }
+  return result.stdout || 'Directory is empty.';
+}
+
+export async function tree(containerId: string, dirPath?: string, maxDepth: number = 2): Promise<string> {
+  const target = dirPath || '.';
+  const result = await dockerService.execInContainer(containerId, [
+    `tree -L ${maxDepth} -a -I ".git|node_modules|__pycache__|.venv|dist|build" "${target}" 2>/dev/null || find "${target}" -maxdepth ${maxDepth} -not -path '*/.*' | head -100`,
+  ]);
+  return result.stdout || 'Empty directory structure.';
+}
+
+export async function stat(containerId: string, targetPath: string): Promise<string> {
+  const result = await dockerService.execInContainer(containerId, [
+    `stat "${targetPath}" 2>/dev/null || ls -ld "${targetPath}"`,
+  ]);
+  if (result.exitCode !== 0) {
+    throw new ToolExecutionError('stat', `Cannot stat path ${targetPath}: ${result.stderr}`);
+  }
+  return result.stdout;
+}
 
 export async function readFile(containerId: string, filePath: string): Promise<string> {
   const result = await dockerService.execInContainer(containerId, [`cat "${filePath}"`]);
@@ -37,6 +64,39 @@ export async function writeFile(containerId: string, filePath: string, content: 
     throw new ToolExecutionError('write_file', `Cannot write ${filePath}: ${result.stderr}`);
   }
   return `File written: ${filePath}`;
+}
+
+export async function createFile(containerId: string, filePath: string, content: string): Promise<string> {
+  const dir = filePath.substring(0, filePath.lastIndexOf('/'));
+  if (dir) {
+    await dockerService.execInContainer(containerId, [`mkdir -p "${dir}"`]);
+  }
+  const result = await dockerService.execInContainer(containerId, [
+    `cat > "${filePath}" << 'RESOLVEAI_EOF'\n${content}\nRESOLVEAI_EOF`,
+  ]);
+  if (result.exitCode !== 0) {
+    throw new ToolExecutionError('create_file', `Cannot create file ${filePath}: ${result.stderr}`);
+  }
+  return `File created: ${filePath}`;
+}
+
+export async function replaceFileContent(
+  containerId: string,
+  filePath: string,
+  targetContent: string,
+  replacementContent: string
+): Promise<string> {
+  const existingContent = await readFile(containerId, filePath);
+  if (!existingContent.includes(targetContent)) {
+    throw new ToolExecutionError(
+      'replace_file_content',
+      `Target content string not found in ${filePath}. Read the file first to inspect exact content.`
+    );
+  }
+
+  const updatedContent = existingContent.replace(targetContent, replacementContent);
+  await writeFile(containerId, filePath, updatedContent);
+  return `Successfully replaced target content in ${filePath}`;
 }
 
 export async function deleteFile(containerId: string, filePath: string): Promise<string> {
