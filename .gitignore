@@ -1,0 +1,64 @@
+# ─── Dependencies ───
+node_modules/
+.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Python & Virtual Environments ───
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# ─── Next.js & Frontend Build Outputs ───
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# ─── SQLite Database & Local Data (Keep folder structure via .gitkeep) ───
+*.db
+*.db-wal
+*.db-shm
+data/*
+!data/.gitkeep
+backend/data/*
+!backend/data/.gitkeep
+
+# ─── Agent Workspaces & Logs ───
+.resolveai/
+logs/*
+!logs/.gitkeep
+backend/logs/*
+!backend/logs/.gitkeep
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+
+# ─── Environment Variables (Keep secrets safe, allow template) ───
+.env
+.env.*
+!.env.example
+
+# ─── IDE & OS Specific ───
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+*.pem
+
+# ─── Deployment ───
+.vercel

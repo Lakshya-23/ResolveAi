@@ -1,0 +1,21 @@
+FROM python:3.12-bookworm
+
+# Install system tools used by agents
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    ca-certificates \
+    ripgrep \
+    fd-find \
+    jq \
+    && rm -rf /var/lib/apt/lists/*
+
+# fd is installed as fdfind on Debian — create symlink
+RUN ln -sf /usr/bin/fdfind /usr/bin/fd
+
+# Install common Python tools
+RUN pip install --no-cache-dir uv poetry
+
+WORKDIR /workspace
+
+CMD ["tail", "-f", "/dev/null"]
