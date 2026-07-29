@@ -15,13 +15,14 @@ An intelligent **Supervisor Agent** coordinates specialized AI agents (**Planner
 ## Key Features
 
 - **LangGraph Multi-Agent Orchestration**
-  - **Supervisor Agent (Tech Lead)**: Central intelligence making dynamic routing decisions based on real-time team reports and user instructions.
+  - **Supervisor Agent**: Central intelligence making dynamic routing decisions based on real-time team reports and user instructions.
   - **Planner Agent (Architect)**: Performs read-only repository analysis, dependency inspection, and strategy planning.
   - **Coding Agent (Engineer)**: Implements precise code modifications, updates tests, and builds features.
   - **Tester Agent (QA Engineer)**: Executes builds, test suites, and linters inside isolated Docker containers.
   - **Reviewer Agent (Code Reviewer)**: Audits code quality, maintainability, architectural compliance, and edge cases.
 
 - **Per-Agent Model Configuration & Fallbacks**
+  - We currently support **Anthropic**, **OpenAI**, **Groq**, and **Google AI Studio**.
   - Independently configure distinct LLM models and providers for each agent (e.g., GPT-4o for Supervisor, Claude 3.5 Sonnet for Coding Agent, Llama-3 for Tester).
   - Configurable primary and fallback models per agent to guarantee maximum reliability and cost optimization.
   - Save and autofill per-model presets with single-click `Autofill` and `View Models` modal breakdowns.
