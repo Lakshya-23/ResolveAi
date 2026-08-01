@@ -2,7 +2,7 @@ import { SupportedEcosystem } from '../../shared/types';
 
 /**
  * File markers that indicate an ecosystem.
- * Checked in order — first match wins.
+ * Checked in order first match wins.
  */
 const ECOSYSTEM_MARKERS: Array<{ ecosystem: SupportedEcosystem; files: string[] }> = [
   {

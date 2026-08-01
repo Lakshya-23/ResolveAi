@@ -32,7 +32,7 @@ const AGENT_INFO: Record<string, {
 }> = {
   environment: {
     role: "Environment Agent",
-    description: "Deterministic — Clones repo, creates Docker container, installs dependencies, verifies build/test commands.",
+    description: "Deterministic Clones repo, creates Docker container, installs dependencies, verifies build/test commands.",
     tools: [
       { name: "Docker", icon: Terminal, desc: "Container creation & management" },
       { name: "Git Clone", icon: GitBranch, desc: "Repository cloning" },
@@ -41,15 +41,15 @@ const AGENT_INFO: Record<string, {
   },
   analysis: {
     role: "Repository Analyzer",
-    description: "Deterministic — Detects ecosystem, package manager, build tools, linter, test framework, project structure.",
+    description: "Deterministic Detects ecosystem, package manager, build tools, linter, test framework, project structure.",
     tools: [
       { name: "File Scanner", icon: Search, desc: "Scans directory structure" },
       { name: "Config Parser", icon: FileText, desc: "Parses package.json, pyproject.toml, etc." },
     ],
   },
   supervisor: {
-    role: "Supervisor Agent (Tech Lead)",
-    description: "Central intelligence — makes ALL routing decisions, evaluates worker reports, communicates with user, owns PR creation.",
+    role: "Supervisor Agent",
+    description: "Central intelligence makes ALL routing decisions, evaluates worker reports, communicates with user, owns PR creation.",
     tools: [
       { name: "Workflow State", icon: Bot, desc: "Maintains session state via LangGraph" },
       { name: "Dynamic Dispatch", icon: Zap, desc: "Invokes Planner, Writer, Tester, or Reviewer" },
@@ -58,7 +58,7 @@ const AGENT_INFO: Record<string, {
   },
   planner: {
     role: "Planner Agent (Architect)",
-    description: "Read-only analysis — understands the issue, explores the codebase, creates a detailed implementation plan.",
+    description: "Read-only analysis understands the issue, explores the codebase, creates a detailed implementation plan.",
     tools: [
       { name: "read_file", icon: FileText, desc: "Read repository files" },
       { name: "search_text", icon: Search, desc: "Search code with ripgrep" },
@@ -70,7 +70,7 @@ const AGENT_INFO: Record<string, {
   },
   writer: {
     role: "Writer Agent (Engineer)",
-    description: "Implements code changes — modifies files, runs build & lint to verify syntax, follows Supervisor Instructions.",
+    description: "Implements code changes modifies files, runs build & lint to verify syntax, follows Supervisor Instructions.",
     tools: [
       { name: "read_file", icon: FileText, desc: "Read files" },
       { name: "write_file", icon: FileCode, desc: "Create/modify files" },
@@ -83,7 +83,7 @@ const AGENT_INFO: Record<string, {
   },
   tester: {
     role: "Tester Agent (QA Engineer)",
-    description: "Validates implementation — runs build, test suite, and linter inside Docker container. Reports pass/fail facts.",
+    description: "Validates implementation runs build, test suite, and linter inside Docker container. Reports pass/fail facts.",
     tools: [
       { name: "build", icon: Code2, desc: "Run build" },
       { name: "test", icon: TestTube, desc: "Run test suite" },
@@ -95,7 +95,7 @@ const AGENT_INFO: Record<string, {
   },
   reviewer: {
     role: "Reviewer Agent (Code Reviewer)",
-    description: "Evaluates quality — examines diff, checks completeness and architecture compliance. Does NOT make routing decisions.",
+    description: "Evaluates quality examines diff, checks completeness and architecture compliance. Does NOT make routing decisions.",
     tools: [
       { name: "read_file", icon: FileText, desc: "Read files" },
       { name: "search_text", icon: Search, desc: "Search code" },
@@ -105,7 +105,7 @@ const AGENT_INFO: Record<string, {
   },
   user: {
     role: "User (Repository Owner)",
-    description: "Human participant — inspects diffs/reports, approves PR creation, or provides revision feedback to Supervisor.",
+    description: "Human participant inspects diffs/reports, approves PR creation, or provides revision feedback to Supervisor.",
     tools: [
       { name: "Diff Viewer", icon: FileCode, desc: "Review before/after code patch" },
       { name: "Code Explorer", icon: Code2, desc: "Browse workspace" },
@@ -266,9 +266,9 @@ function NodeInfoPanel({ nodeId, onClose }: { nodeId: string; onClose: () => voi
 
 // ─── Initial Graph Builder with Dynamic Edge & Text Feedback ───
 function buildInitialGraphElements(
-  activeNode: string,
-  completedNodes: Set<string>,
-  sessionStatus: string,
+  activeNode: string = "",
+  completedNodes: Set<string> = new Set<string>(),
+  sessionStatus: string = "IDLE",
   onNodeClick: (nodeId: string) => void,
 ): { nodes: Node<WorkflowNodeData>[]; edges: Edge[] } {
   const getStatus = (id: string): "idle" | "active" | "completed" | "failed" => {
@@ -441,14 +441,18 @@ function buildInitialGraphElements(
 
 // ─── Inner Workflow Graph (with auto fitView on container resize) ───
 interface WorkflowGraphProps {
-  activeNode: string;
-  completedNodes: Set<string>;
-  sessionStatus: string;
+  activeNode?: string;
+  completedNodes?: Set<string>;
+  sessionStatus?: string;
 }
 
 const nodeTypes = { workflowNode: WorkflowNode };
 
-function WorkflowGraphContent({ activeNode, completedNodes, sessionStatus }: WorkflowGraphProps) {
+function WorkflowGraphContent({
+  activeNode = "",
+  completedNodes = new Set<string>(),
+  sessionStatus = "IDLE",
+}: WorkflowGraphProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { fitView } = useReactFlow();
   const [selectedNode, setSelectedNode] = useState<string | null>(null);

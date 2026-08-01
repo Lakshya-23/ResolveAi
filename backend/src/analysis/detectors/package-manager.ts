@@ -47,7 +47,7 @@ export function detectPackageManager(
         return { name: pm.name, lockFile: pm.lockFile, installCommand: pm.installCmd };
       }
     }
-    // Check pyproject.toml — could be poetry, pip, or uv
+    // Check pyproject.toml - could be poetry, pip, or uv
     if (fileSet.has('pyproject.toml')) {
       return { name: 'pip', lockFile: null, installCommand: 'pip install -e .' };
     }

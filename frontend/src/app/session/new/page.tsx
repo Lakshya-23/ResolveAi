@@ -585,7 +585,6 @@ export default function NewSessionPage() {
             </div>
 
             <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-blue-400 shrink-0" />
               <span>API keys are loaded securely from backend <code className="font-mono bg-blue-500/20 px-1 py-0.5 rounded">.env</code> based on the selected provider. Click <strong>Test Model</strong> to verify connectivity.</span>
             </div>
 
@@ -650,9 +649,9 @@ export default function NewSessionPage() {
                 {(["supervisor", "planner", "writer", "tester", "reviewer"] as const).map((agentKey) => {
                   const agentState = agentLLMs[agentKey];
                   const labels: Record<string, { name: string; desc: string }> = {
-                    supervisor: { name: "Supervisor Agent (Tech Lead)", desc: "Coordinates team, evaluates reports & decides workflow steps" },
+                    supervisor: { name: "Supervisor Agent", desc: "Coordinates team, evaluates reports & decides workflow steps" },
                     planner: { name: "Planner Agent", desc: "Analyzes issue & creates execution plan" },
-                    writer: { name: "Writer (Code) Agent", desc: "Implements code & file modifications" },
+                    writer: { name: "Coding Agent", desc: "Implements code & file modifications" },
                     tester: { name: "Tester Agent", desc: "Executes build, test suites & linters" },
                     reviewer: { name: "Reviewer Agent", desc: "Reviews code quality & diffs" },
                   };
@@ -900,7 +899,6 @@ export default function NewSessionPage() {
 
             <ul className="text-xs text-muted-foreground space-y-1 pl-1">
               <li>• <strong>Agent Access:</strong> Restricted exclusively to <strong>Planner</strong> and <strong>Tester</strong> agents.</li>
-              <li>• <strong>API Key:</strong> Loaded automatically from backend <code className="font-mono bg-muted px-1 py-0.5 rounded text-foreground">TAVILY_API_KEY</code> in <code className="font-mono bg-muted px-1 py-0.5 rounded text-foreground">.env</code>.</li>
             </ul>
           </section>
 
@@ -908,7 +906,7 @@ export default function NewSessionPage() {
           <section className="p-5 rounded-xl bg-card border border-border space-y-3">
             <div>
               <div className="flex items-center gap-2 text-sm font-medium">
-                <Terminal className="w-4 h-4 text-cyan-400" />Repository Environment Variables <span className="text-xs text-muted-foreground font-normal">(optional — for repository runtime / test container)</span>
+                <Terminal className="w-4 h-4 text-cyan-400" />Repository Environment Variables <span className="text-xs text-muted-foreground font-normal">(optional for repository runtime / test container)</span>
               </div>
               <p className="text-[11px] text-muted-foreground mt-0.5">
                 Injected into the repository container for build commands, test suites, and linter runs (KEY=value format).

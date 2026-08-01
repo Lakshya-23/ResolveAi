@@ -1,4 +1,4 @@
-# ResolvAI — Python Dependencies
+# ResolvAI Python Dependencies
 # Required for LiteLLM Multi-Provider LLM Proxy & Auxiliary Tooling
 
 litellm>=1.30.0
