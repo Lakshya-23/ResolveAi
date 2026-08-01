@@ -1,14 +1,5 @@
 # LiteLLM Proxy Configuration
 # Run with: litellm --config litellm_config.yaml --port 4000
-#
-# BYOK (Bring Your Own Key) Support:
-#   Each model has `configurable_clientside_auth_params: ["api_key"]`
-#   This allows the backend to pass the user's API key per-request
-#   via the request body. LiteLLM forwards it to the provider.
-#
-# Environment Variable Fallback:
-#   `api_key: os.environ/...` ensures LiteLLM falls back to server env vars
-#   if a request does not specify an explicit API key.
 
 model_list:
   # ─── Wildcards (Allow any model name for each provider) ───

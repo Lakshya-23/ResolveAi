@@ -296,9 +296,6 @@ export default function HomePage() {
                     <div className={`w-9 h-9 rounded-lg border flex items-center justify-center ${agent.color}`}>
                       <agent.icon className="w-4.5 h-4.5" />
                     </div>
-                    <span className={`text-[10px] font-mono font-semibold px-2 py-0.5 rounded border ${agent.badgeColor}`}>
-                      Agent Role
-                    </span>
                   </div>
 
                   <h3 className="text-sm font-bold text-white font-mono">{agent.title}</h3>
